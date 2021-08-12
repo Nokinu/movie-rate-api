@@ -27,6 +27,8 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
+    public Flux<Movie> findAllMoviesByYear(String year) {return movieRepository.findMoviesByYear(year);}
+
     public Mono<Movie> saveMovie(Movie movie) {
         return movieRepository.save(movie);
     }

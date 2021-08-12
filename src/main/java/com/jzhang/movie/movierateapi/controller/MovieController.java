@@ -4,9 +4,11 @@ import com.jzhang.movie.movierateapi.model.Movie;
 import com.jzhang.movie.movierateapi.service.MovieService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Api(tags = "Movie APIs")
 @RestController
@@ -23,6 +25,11 @@ public class MovieController {
     @GetMapping
     public Flux<Movie> getAllMovies() {
         return movieService.findAllMovies();
+    }
+
+    @GetMapping(value = "/{year}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Movie> getAllMoviesByYear(@PathVariable("year") String year) {
+        return movieService.findAllMoviesByYear(year).subscribeOn(Schedulers.boundedElastic());
     }
 
     @ApiOperation(value = "Find Movie by ID")
